@@ -3,7 +3,10 @@ import { ProductService } from "../../../../../shared/services/product.service";
 import { Component, OnInit, ViewChild } from "@angular/core";
 import * as jspdf from "jspdf";
 import html2canvas from "html2canvas";
+import { AuthService } from "../../../../../shared/services/auth.service";
+
 declare var $: any;
+
 @Component({
   selector: "app-result",
   templateUrl: "./result.component.html",
@@ -15,7 +18,10 @@ export class ResultComponent implements OnInit {
   totalPrice = 0;
   tax = 6.4;
 
-  constructor(private productService: ProductService) {
+  constructor(
+    private authService: AuthService,
+    private productService: ProductService
+  ) {
     /* Hiding Billing Tab Element */
     document.getElementById("productsTab").style.display = "none";
     document.getElementById("shippingTab").style.display = "none";
@@ -50,5 +56,9 @@ export class ResultComponent implements OnInit {
       pdf.addImage(contentDataURL, "PNG", 0, position, imgWidth, imgHeight);
       pdf.save("asd.pdf"); // Generated PDF
     });
+  }
+
+  async pay() {
+    await this.productService.orderCartProducts(this.authService.user);
   }
 }
