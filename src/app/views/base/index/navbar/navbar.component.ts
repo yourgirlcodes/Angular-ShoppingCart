@@ -5,6 +5,7 @@ import { Router } from "@angular/router";
 import { ProductService } from "./../../../../shared/services/product.service";
 
 import { ThemeService } from "src/app/shared/services/theme.service";
+import { AuthService } from "../../../../shared/services/auth.service";
 declare var $: any;
 
 @Component({
@@ -49,7 +50,7 @@ export class NavbarComponent implements OnInit {
   ];
 
   constructor(
-    // public authService: AuthService,
+    public authService: AuthService,
     private router: Router,
     public productService: ProductService,
     public translate: TranslateService,
@@ -59,8 +60,12 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit() {}
+
+  login() {
+    this.authService.showRegistrationLogin();
+  }
   logout() {
-    // this.authService.logout();
+    this.authService.logout();
     this.router.navigate(["/"]);
   }
 
