@@ -1,8 +1,3 @@
-import {
-  AngularFireList,
-  AngularFireObject,
-  AngularFireDatabase,
-} from "@angular/fire/database";
 import { Billing } from "./../models/billing";
 import { Injectable } from "@angular/core";
 
@@ -10,9 +5,9 @@ import { Injectable } from "@angular/core";
   providedIn: "root",
 })
 export class ShippingService {
-  shippings: AngularFireList<Billing>;
-  shipping: AngularFireObject<Billing>;
-  constructor(private db: AngularFireDatabase) {
+  shippings: any; //AngularFireList<Billing>;
+  shipping: any; //AngularFireObject<Billing>;
+  constructor() {
     this.getshippings();
   }
 
@@ -21,12 +16,12 @@ export class ShippingService {
   }
 
   getshippings() {
-    this.shippings = this.db.list("shippings");
+    // this.shippings = this.db.list("shippings");
     return this.shippings;
   }
 
   getshippingById(key: string) {
-    this.shipping = this.db.object("products/" + key);
+    // this.shipping = this.db.object("products/" + key);
     return this.shipping;
   }
 
