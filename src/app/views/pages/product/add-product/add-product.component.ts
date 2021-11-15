@@ -34,7 +34,7 @@ export class AddProductComponent implements OnInit {
         "http://via.placeholder.com/640x360/007bff/ffffff";
     }
 
-    this.productService.createProduct(payload, () => {
+    this.productService.createProduct(payload).then(() => {
       this.product = new Product();
       $("#exampleModalLong").modal("hide");
       toastr.success(

@@ -1,8 +1,10 @@
 import { Injectable } from "@angular/core";
 import { Product } from "../models/product";
-// import { AuthService } from "./auth.service";
 import { ToastrService } from "./toastr.service";
-import { of } from "rxjs";
+import { Observable } from "rxjs";
+import { map, tap } from "rxjs/operators";
+import { WoocommerceSyncService } from "../../woocommerce-sync.service";
+import { User } from "../models/user";
 
 @Injectable()
 export class ProductService {
@@ -14,28 +16,43 @@ export class ProductService {
   cartProducts: FavouriteProduct;
 
   constructor(
-    // private authService: AuthService,
+    private woocommerce: WoocommerceSyncService,
     private toastrService: ToastrService
   ) {}
 
+  private products$: Observable<Product[]> = this.getProducts();
+
   getProducts() {
-    return of(this.products);
+    this.products$ = this.woocommerce.getProducts().pipe(
+      map((products: any[]) =>
+        products.map((product) => ({
+          $key: product.id,
+          favourite: false,
+          productAdded: 0,
+          productCategory: product.categories
+            ? product.categories[0]?.name
+            : "",
+          productDescription: product.description.replace("<p>", ""),
+          productId: product.id,
+          productImageUrl: product.images ? product.images[0].src : "",
+          productName: product.name,
+          productPrice: product.price,
+          productQuatity: product.stock_quantity || 0,
+          productSeller: "",
+          ratings: product.rating_count,
+        }))
+      ),
+      tap((products) => (this.products = products))
+    );
+
+    return this.products$;
   }
 
-  createProduct(data: Product, callback: () => void) {
-    this.products.push(data);
-    callback();
-  }
+  async createProduct(data: Product) {}
 
   getProductById(key: string) {
-    return of(this.product);
-  }
-
-  updateProduct(prod: Product) {
-    this.products.splice(
-      this.products.findIndex((p) => p.$key == prod.$key),
-      1,
-      prod
+    return this.products$.pipe(
+      map((prods) => prods.find((p) => p.$key == key))
     );
   }
 
@@ -132,6 +149,10 @@ export class ProductService {
       JSON.parse(localStorage.getItem("avct_item")) || [];
 
     return products;
+  }
+
+  orderCartProducts(user: User) {
+    return this.woocommerce.order(user, this.getLocalCartProducts() || []);
   }
 }
 

@@ -5,6 +5,7 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve --ssl",
+    "server": "ts-node server/index.ts",
     "build": "ng build",
     "test": "ng test",
     "postinstall": "ngcc",
