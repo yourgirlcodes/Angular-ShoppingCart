@@ -1,26 +1,25 @@
 import { Injectable } from "@angular/core";
-import { AngularFireDatabase, AngularFireList } from "@angular/fire/database";
 
 import * as moment from "moment";
 import { User } from "../models/user";
+import { Observable, of } from "rxjs";
 
 @Injectable()
 export class UserService {
   selectedUser: User = new User();
-  users: AngularFireList<User>;
+  users: User[] = [];
 
   location = {
     lat: null,
     lon: null,
   };
 
-  constructor(private db: AngularFireDatabase) {
+  constructor() {
     this.getUsers();
   }
 
   getUsers() {
-    this.users = this.db.list("clients");
-    return this.users;
+    return of(this.users);
   }
 
   getUserById(id: string) {}
@@ -36,13 +35,15 @@ export class UserService {
   }
 
   isAdmin(emailId: string) {
-    return this.db.list("clients", (ref) =>
-      ref.orderByChild("email").equalTo(emailId)
-    );
+    return of([]);
   }
 
   updateUser(user: User) {
-    this.users.update(user.$key, user);
+    this.users.splice(
+      this.users.findIndex((u) => u.$key == user.$key),
+      1,
+      user
+    );
   }
 
   setLocation(lat: any, lon: any) {

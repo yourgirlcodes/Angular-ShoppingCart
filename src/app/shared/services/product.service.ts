@@ -1,31 +1,25 @@
 import { Injectable } from "@angular/core";
-import {
-  AngularFireDatabase,
-  AngularFireList,
-  AngularFireObject,
-} from "@angular/fire/database";
 import { Product } from "../models/product";
 // import { AuthService } from "./auth.service";
 import { ToastrService } from "./toastr.service";
+import { of } from "rxjs";
 
 @Injectable()
 export class ProductService {
-  products: AngularFireList<Product>;
-  product: AngularFireObject<Product>;
+  products: Product[];
+  product: Product;
 
   // favouriteProducts
-  favouriteProducts: AngularFireList<FavouriteProduct>;
-  cartProducts: AngularFireList<FavouriteProduct>;
+  favouriteProducts: FavouriteProduct[];
+  cartProducts: FavouriteProduct;
 
   constructor(
-    private db: AngularFireDatabase,
     // private authService: AuthService,
     private toastrService: ToastrService
   ) {}
 
   getProducts() {
-    this.products = this.db.list("products");
-    return this.products;
+    return of(this.products);
   }
 
   createProduct(data: Product, callback: () => void) {
@@ -34,16 +28,22 @@ export class ProductService {
   }
 
   getProductById(key: string) {
-    this.product = this.db.object("products/" + key);
-    return this.product;
+    return of(this.product);
   }
 
-  updateProduct(data: Product) {
-    this.products.update(data.$key, data);
+  updateProduct(prod: Product) {
+    this.products.splice(
+      this.products.findIndex((p) => p.$key == prod.$key),
+      1,
+      prod
+    );
   }
 
   deleteProduct(key: string) {
-    this.products.remove(key);
+    this.products.splice(
+      this.products.findIndex((p) => p.$key == key),
+      1
+    );
   }
 
   /*
@@ -52,11 +52,6 @@ export class ProductService {
 
   // Get Favourite Product based on userId
   async getUsersFavouriteProduct() {
-    // const user = await this.authService.user$.toPromise();
-    // this.favouriteProducts = this.db.list("favouriteProducts", (ref) =>
-    //   ref.orderByChild("userId").equalTo(user.$key)
-    // );
-    // return this.favouriteProducts;
     return new Promise((res, rej) => {
       res([]);
     });
@@ -82,7 +77,7 @@ export class ProductService {
 
   // Removing Favourite Product from Database
   removeFavourite(key: string) {
-    this.favouriteProducts.remove(key);
+    // this.favouriteProducts.remove(key);
   }
 
   // Removing Favourite Product from localStorage

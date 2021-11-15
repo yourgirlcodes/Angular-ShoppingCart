@@ -1,7 +1,5 @@
 import { Injectable } from "@angular/core";
-import { AngularFireAuth } from "@angular/fire/auth";
 import { Router } from "@angular/router";
-import * as firebase from "firebase/app";
 import { BehaviorSubject, Observable } from "rxjs";
 import { filter, map } from "rxjs/operators";
 
@@ -12,7 +10,7 @@ export const ANONYMOUS_USER: User = new User();
 
 @Injectable()
 export class AuthService {
-  user: Observable<firebase.User>;
+  user: User;
 
   private subject = new BehaviorSubject<User>(undefined);
 
@@ -32,66 +30,42 @@ export class AuthService {
     map((user) => !!user.isAdmin)
   );
 
-  constructor(
-    private firebaseAuth: AngularFireAuth,
-    private router: Router,
-    private userService: UserService
-  ) {
-    this.user = firebaseAuth.authState;
+  constructor(private router: Router, private userService: UserService) {
+    // this.user = init;
 
-    this.user.subscribe((user) => {
+    this.user$.subscribe((user) => {
       console.log({ user });
       if (user) {
-        this.userService
-          .isAdmin(user.email)
-          .snapshotChanges()
-          .subscribe((data) => {
-            if (!data.length) {
-              this.subject.next(ANONYMOUS_USER);
-              return;
-            }
+        this.userService.isAdmin(user.emailId).subscribe((data) => {
+          if (!data.length) {
+            this.subject.next(ANONYMOUS_USER);
+            return;
+          }
 
-            data.forEach((el) => {
-              const y: any = el.payload.toJSON();
-              console.log({ y });
-              this.subject.next({
-                $key: y.uid || y.id,
-                userName: user.displayName || "Anonymous User",
-                emailId: y.email,
-                phoneNumber: user.phoneNumber,
-                avatar: user.photoURL,
-                isAdmin: y.isAdmin,
-              });
+          data.forEach((el) => {
+            const y: any = el.payload.toJSON();
+            console.log({ y });
+            this.subject.next({
+              $key: y.uid || y.id,
+              userName: user.userName || "Anonymous User",
+              emailId: y.emailId,
+              phoneNumber: user.phoneNumber,
+              avatar: user.avatar,
+              isAdmin: y.isAdmin,
             });
           });
+        });
       } else {
         this.subject.next(ANONYMOUS_USER);
       }
     });
   }
 
-  logout() {
-    this.firebaseAuth.signOut().then((res) => {
-      this.subject.next(ANONYMOUS_USER);
-      this.router.navigate(["/"]);
-    });
-  }
+  logout() {}
 
-  createUserWithEmailAndPassword(emailID: string, password: string) {
-    return this.firebaseAuth.createUserWithEmailAndPassword(emailID, password);
-  }
+  createUserWithEmailAndPassword(emailID: string, password: string) {}
 
-  signInRegular(email: string, password: string) {
-    const credential = firebase.auth.EmailAuthProvider.credential(
-      email,
-      password
-    );
-    return this.firebaseAuth.signInWithEmailAndPassword(email, password);
-  }
+  signInRegular(email: string, password: string) {}
 
-  signInWithGoogle() {
-    return this.firebaseAuth.signInWithPopup(
-      new firebase.auth.GoogleAuthProvider()
-    );
-  }
+  signInWithGoogle() {}
 }

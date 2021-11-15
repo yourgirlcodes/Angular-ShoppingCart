@@ -29,12 +29,12 @@ export class ProductListComponent implements OnInit {
   getAllProducts() {
     this.loading = true;
     const x = this.productService.getProducts();
-    x.snapshotChanges().subscribe(
+    x.subscribe(
       (product) => {
         this.loading = false;
         this.productList = [];
         product.forEach((element) => {
-          const y = { ...element.payload.toJSON(), $key: element.key };
+          const y = { ...element, $key: element.$key };
           this.productList.push(y as Product);
         });
       },

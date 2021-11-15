@@ -32,7 +32,7 @@ import { FireBaseConfig } from "./../../environments/firebase.config";
   imports: [
     CommonModule,
     MDBBootstrapModule.forRoot(),
-    AngularFireModule.initializeApp(FireBaseConfig),
+    // AngularFireModule.initializeApp(FireBaseConfig),
     AngularFireDatabaseModule,
     AngularFireAuthModule,
     FormsModule,

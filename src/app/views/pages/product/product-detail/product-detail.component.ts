@@ -29,9 +29,9 @@ export class ProductDetailComponent implements OnInit, OnDestroy {
 
   getProductDetail(id: string) {
     const x = this.productService.getProductById(id);
-    x.snapshotChanges().subscribe(
+    x.subscribe(
       (product) => {
-        const y = { ...(product.payload.toJSON() as Product), $key: id };
+        const y = { ...product, $key: id };
         this.product = y;
       },
       (error) => {
