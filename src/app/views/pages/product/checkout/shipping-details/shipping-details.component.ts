@@ -1,12 +1,12 @@
 import { Product } from "../../../../../shared/models/product";
 import { ShippingService } from "../../../../../shared/services/shipping.service";
-import { UserDetail, User } from "../../../../../shared/models/user";
-// import { AuthService } from "../../../../../shared/services/auth.service";
+import { User } from "../../../../../shared/models/user";
 import { Component, OnInit } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { Router } from "@angular/router";
 import { ProductService } from "../../../../../shared/services/product.service";
-import { map } from "rxjs/operators";
+import { AuthService } from "../../../../../shared/services/auth.service";
+
 @Component({
   selector: "app-shipping-details",
   templateUrl: "./shipping-details.component.html",
@@ -15,12 +15,10 @@ import { map } from "rxjs/operators";
 export class ShippingDetailsComponent implements OnInit {
   userDetails: User = new User();
 
-  userDetail: UserDetail = new UserDetail();
-
   products: Product[];
 
   constructor(
-    // authService: AuthService,
+    authService: AuthService,
     private shippingService: ShippingService,
     productService: ProductService,
     private router: Router
@@ -32,12 +30,9 @@ export class ShippingDetailsComponent implements OnInit {
     document.getElementById("resultTab").style.display = "none";
 
     this.products = productService.getLocalCartProducts();
-    // authService.user$.pipe(
-    //   map((user) => {
-    //     console.log({ user });
-    //     this.userDetails = user;
-    //   })
-    // );
+    authService.user$.subscribe((user) => {
+      this.userDetails = user;
+    });
   }
 
   ngOnInit() {}

@@ -13,7 +13,7 @@
             type="text"
             class="form-control"
             id="firstName"
-            [(ngModel)]="userDetail.firstName"
+            [(ngModel)]="userDetails.firstName"
             name="firstName"
             required
           />
@@ -27,7 +27,7 @@
             type="text"
             class="form-control"
             id="lastName"
-            [(ngModel)]="userDetail.lastName"
+            [(ngModel)]="userDetails.lastName"
             name="lastName"
             required
           />
@@ -61,7 +61,7 @@
           class="form-control"
           id="address"
           placeholder="1234 Main St"
-          [(ngModel)]="userDetail.address1"
+          [(ngModel)]="userDetails.address1"
           name="address1"
           required
         />
@@ -80,7 +80,7 @@
           class="form-control"
           id="address2"
           placeholder="Apartment or suite"
-          [(ngModel)]="userDetail.address2"
+          [(ngModel)]="userDetails.address2"
           name="address2"
         />
       </div>
@@ -92,7 +92,7 @@
             class="custom-select d-block w-100"
             id="country"
             required
-            [(ngModel)]="userDetail.country"
+            [(ngModel)]="userDetails.country"
             name="country"
           >
             <option value="">Choose...</option>
@@ -107,7 +107,7 @@
           <select
             class="custom-select d-block w-100"
             id="state"
-            [(ngModel)]="userDetail.state"
+            [(ngModel)]="userDetails.state"
             name="state"
             required
           >
@@ -125,7 +125,7 @@
             class="form-control"
             id="zip"
             placeholder=""
-            [(ngModel)]="userDetail.zip"
+            [(ngModel)]="userDetails.zip"
             name="zip"
             required
           />

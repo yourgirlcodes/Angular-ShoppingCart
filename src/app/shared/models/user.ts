@@ -7,21 +7,15 @@ export class User {
     lat: number;
     lon: number;
   };
-  phoneNumber: string;
+  phoneNumber?: string;
   createdOn?: string;
-  isAdmin: boolean;
+  isAdmin?: boolean;
   avatar?: string;
-}
-
-export class UserDetail {
-  $key: string;
-  firstName: string;
-  lastName: string;
-  userName: string;
-  emailId: string;
-  address1: string;
-  address2: string;
-  country: string;
-  state: string;
-  zip: number;
+  firstName?: string;
+  lastName?: string;
+  address1?: string;
+  address2?: string;
+  country?: string;
+  state?: string;
+  zip?: number;
 }
