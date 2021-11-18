@@ -16,5 +16,9 @@ export class ReportService {
     this.cdp.report("On Add To Cart", payload);
   }
 
-  onLogin(user: User) {}
+  onLogin(user: User) {
+    this.cdp.report("On Login", {
+      ciamId: user.$key,
+    });
+  }
 }
