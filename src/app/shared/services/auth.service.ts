@@ -36,63 +36,15 @@ export class AuthService {
     map((user) => !!user.isAdmin)
   );
 
-  constructor(
-    private router: Router,
-    reportService: ReportService,
-    private zone: NgZone,
-    @Inject(GIGYA_CIAM) private gigya: any
-  ) {
-    this.gigya.accounts.addEventHandlers({
-      onLogin: (e) => this.refresh(),
-      onLogout: (e) => this.subject.next(ANONYMOUS_USER),
-    });
-    combineLatest([this.user$, this.isLoggedIn$])
-      .pipe(
-        filter(([_, loggedIn]) => loggedIn),
-        map(([user]) => user)
-      )
-      .subscribe((user) => reportService.onLogin(user));
-
+  constructor(private router: Router, private zone: NgZone) {
     this.refresh();
   }
 
-  async refresh() {
-    return await this.zone.runOutsideAngular(() => {
-      return new Promise((r) =>
-        this.gigya.accounts.getAccountInfo({
-          callback: (res) => {
-            this.subject.next(
-              res.errorCode != 0
-                ? ANONYMOUS_USER
-                : {
-                    $key: res.UID,
-                    emailId: res.profile?.email,
-                    userName: `${res.profile?.firstName} ${res.profile?.lastName}`,
-                    firstName: res.profile?.firstName,
-                    lastName: res.profile?.lastName,
-                    zip: res.profile?.zip,
-                    phoneNumber: res.profile?.phone,
-                    isAdmin: false,
-                  }
-            );
+  async refresh() {}
 
-            r(res);
-          },
-        })
-      );
-    });
-  }
+  logout() {}
 
-  logout() {
-    this.gigya.accounts.logout();
-  }
-
-  showRegistrationLogin() {
-    this.gigya.accounts.showScreenSet({
-      screenSet: "Default-RegistrationLogin",
-      startScreen: "gigya-login-screen",
-    });
-  }
+  showRegistrationLogin() {}
 
   createUserWithEmailAndPassword(emailID: string, password: string) {}
 

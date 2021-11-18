@@ -7,18 +7,9 @@ export const GIGYA_CDP = new InjectionToken("gigya cdp");
   providedIn: "root",
 })
 export class ReportService {
-  constructor(
-    @Inject(GIGYA_CDP)
-    private CDP: { report(eventName: string, payload: object): void }
-  ) {}
+  constructor() {}
 
-  onAddToCard(payload: { product: string; category: string }) {
-    this.CDP.report("Add To Cart", payload);
-  }
+  onAddToCard(payload: { product: string; category: string }) {}
 
-  onLogin(user: User) {
-    this.CDP.report("On Login", {
-      ciamId: user.$key,
-    });
-  }
+  onLogin(user: User) {}
 }

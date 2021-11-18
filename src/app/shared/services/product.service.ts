@@ -18,8 +18,7 @@ export class ProductService {
 
   constructor(
     private woocommerce: WoocommerceSyncService,
-    private toastrService: ToastrService,
-    private reportService: ReportService
+    private toastrService: ToastrService
   ) {}
 
   private products$: Observable<Product[]> = this.getProducts();
@@ -119,11 +118,6 @@ export class ProductService {
   addToCart(data: Product): void {
     const a: Product[] = JSON.parse(localStorage.getItem("avct_item")) || [];
     a.push(data);
-
-    this.reportService.onAddToCard({
-      product: data.productName,
-      category: data.productCategory,
-    });
 
     this.toastrService.wait(
       "Adding Product to Cart",
