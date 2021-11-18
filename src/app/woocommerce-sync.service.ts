@@ -60,7 +60,9 @@ export class WoocommerceSyncService {
         {
           method_id: "flat_rate",
           method_title: "Flat Rate",
-          total: products.reduce((sum, cur) => sum + cur.productPrice, 0),
+          total: products
+            .reduce((sum, cur) => sum + Number(cur.productPrice), 0)
+            .toString(),
         },
       ],
     });
@@ -88,7 +90,10 @@ export class WoocommerceSyncService {
           }
           return res;
         }, {})
-      ).map(([product_id, quantity]) => ({ product_id, quantity }));
+      ).map(([product_id, quantity]) => ({
+        product_id: Number(product_id),
+        quantity,
+      }));
     }
   }
 }

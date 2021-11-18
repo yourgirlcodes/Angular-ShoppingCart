@@ -26,15 +26,18 @@ export function setup(app: Express) {
     console.log("server post customer");
     WooCommerce.post("customers", req.body).then((nCustomer) => {
       console.log("new customer", nCustomer);
-      res.status(200).json(nCustomer);
+      res.status(201).json(nCustomer);
     });
   });
 
   app.post("/orders", (req, res) => {
-    console.log("server post order");
-    WooCommerce.post("orders", req.body).then((ordersRes) => {
-      console.log("ordersRes", ordersRes);
-      res.status(200).json(ordersRes);
-    });
+    console.log(`post order`);
+    WooCommerce.post("orders", req.body)
+      .then((ordersRes) => {
+        res.status(201).json(ordersRes.data);
+      })
+      .catch((error) => {
+        console.log("Response error:", error.data);
+      });
   });
 }

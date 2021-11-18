@@ -1,14 +1,14 @@
-import { Injectable, NgZone } from "@angular/core";
+import { Inject, Injectable, InjectionToken, NgZone } from "@angular/core";
 import { Router } from "@angular/router";
 import { BehaviorSubject, combineLatest, Observable } from "rxjs";
 import { filter, map, tap } from "rxjs/operators";
 
 import { User } from "../models/user";
-import { WoocommerceSyncService } from "../../woocommerce-sync.service";
+import { ReportService } from "../../report.service";
 
 export const ANONYMOUS_USER: User = new User();
 
-declare const window: { gigya: any };
+export const GIGYA_CIAM = new InjectionToken("gigya ciam");
 
 @Injectable()
 export class AuthService {
@@ -36,12 +36,11 @@ export class AuthService {
     map((user) => !!user.isAdmin)
   );
 
-  private gigya = window.gigya;
-
   constructor(
     private router: Router,
-    woocommerce: WoocommerceSyncService,
-    private zone: NgZone
+    reportService: ReportService,
+    private zone: NgZone,
+    @Inject(GIGYA_CIAM) private gigya: any
   ) {
     this.gigya.accounts.addEventHandlers({
       onLogin: (e) => this.refresh(),
@@ -52,7 +51,7 @@ export class AuthService {
         filter(([_, loggedIn]) => loggedIn),
         map(([user]) => user)
       )
-      .subscribe((user) => woocommerce.syncUser(user));
+      .subscribe((user) => reportService.onLogin(user));
 
     this.refresh();
   }

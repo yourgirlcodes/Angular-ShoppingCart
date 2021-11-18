@@ -16,7 +16,7 @@ import { FilterByBrandPipe } from "./pipes/filterByBrand.pipe";
 import { ProductService } from "./services/product.service";
 import { AdminGaurd } from "./guards/admin-gaurd";
 import { AuthGuard } from "./guards/auth_gaurd";
-import { AuthService } from "./services/auth.service";
+import { AuthService, GIGYA_CIAM } from "./services/auth.service";
 import { UserService } from "./services/user.service";
 import { TranslatePipe } from "./pipes/translate.pipe";
 import { NgxContentLoadingModule } from "ngx-content-loading";
@@ -27,6 +27,9 @@ import { ScrollingModule } from "@angular/cdk/scrolling";
 import { CdkTableModule } from "@angular/cdk/table";
 import { CdkTreeModule } from "@angular/cdk/tree";
 import { FireBaseConfig } from "./../../environments/firebase.config";
+import { GIGYA_CDP } from "../report.service";
+
+declare const window: { gigya?: any; CDP?: any };
 
 @NgModule({
   imports: [
@@ -81,6 +84,14 @@ import { FireBaseConfig } from "./../../environments/firebase.config";
     ProductService,
     UserService,
     FormBuilder,
+    {
+      provide: GIGYA_CIAM,
+      useFactory: () => window.gigya,
+    },
+    {
+      provide: GIGYA_CDP,
+      useFactory: () => window.CDP,
+    },
   ],
 })
 export class SharedModule {}

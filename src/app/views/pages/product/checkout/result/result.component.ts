@@ -4,6 +4,8 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import * as jspdf from "jspdf";
 import html2canvas from "html2canvas";
 import { AuthService } from "../../../../../shared/services/auth.service";
+import { Router } from "@angular/router";
+import { ToastrService } from "../../../../../shared/services/toastr.service";
 
 declare var $: any;
 
@@ -20,7 +22,9 @@ export class ResultComponent implements OnInit {
 
   constructor(
     private authService: AuthService,
-    private productService: ProductService
+    private productService: ProductService,
+    private router: Router,
+    private toast: ToastrService
   ) {
     /* Hiding Billing Tab Element */
     document.getElementById("productsTab").style.display = "none";
@@ -31,7 +35,7 @@ export class ResultComponent implements OnInit {
     this.products = productService.getLocalCartProducts();
 
     this.products.forEach((product) => {
-      this.totalPrice += product.productPrice;
+      this.totalPrice += Number(product.productPrice);
     });
 
     this.date = Date.now();
@@ -59,6 +63,12 @@ export class ResultComponent implements OnInit {
   }
 
   async pay() {
-    await this.productService.orderCartProducts(this.authService.user);
+    this.toast.wait("Loading...", "Sending order...");
+    await this.productService
+      .orderCartProducts(this.authService.user)
+      .toPromise();
+    this.toast.success("Order sent", "Your items are on their way...");
+    this.productService.clearLocalCart();
+    this.router.navigateByUrl("/");
   }
 }

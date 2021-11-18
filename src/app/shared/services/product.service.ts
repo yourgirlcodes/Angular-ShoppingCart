@@ -5,6 +5,7 @@ import { Observable } from "rxjs";
 import { map, tap } from "rxjs/operators";
 import { WoocommerceSyncService } from "../../woocommerce-sync.service";
 import { User } from "../models/user";
+import { ReportService } from "../../report.service";
 
 @Injectable()
 export class ProductService {
@@ -17,7 +18,8 @@ export class ProductService {
 
   constructor(
     private woocommerce: WoocommerceSyncService,
-    private toastrService: ToastrService
+    private toastrService: ToastrService,
+    private reportService: ReportService
   ) {}
 
   private products$: Observable<Product[]> = this.getProducts();
@@ -29,9 +31,7 @@ export class ProductService {
           $key: product.id,
           favourite: false,
           productAdded: 0,
-          productCategory: product.categories
-            ? product.categories[0]?.name
-            : "",
+          productCategory: product.categories?.[0]?.name ?? "",
           productDescription: product.description.replace("<p>", ""),
           productId: product.id,
           productImageUrl: product.images ? product.images[0].src : "",
@@ -120,6 +120,11 @@ export class ProductService {
     const a: Product[] = JSON.parse(localStorage.getItem("avct_item")) || [];
     a.push(data);
 
+    this.reportService.onAddToCard({
+      product: data.productName,
+      category: data.productCategory,
+    });
+
     this.toastrService.wait(
       "Adding Product to Cart",
       "Product Adding to the cart"
@@ -141,6 +146,10 @@ export class ProductService {
     }
     // ReAdding the products after remove
     localStorage.setItem("avct_item", JSON.stringify(products));
+  }
+
+  clearLocalCart() {
+    localStorage.setItem("avct_item", JSON.stringify([]));
   }
 
   // Fetching Locat CartsProducts

@@ -97,7 +97,7 @@
           "options": {
             "browserTarget": "shopping-cart:build",
             "port": 8000,
-            "allowedHosts": ["abc.fbi.com"],
+            "allowedHosts": ["abc.fbi.com", "cdp.vcap.me"],
             "sslKey": "./ssl/key.pem",
             "sslCert": "./ssl/cert.pem"
           },
