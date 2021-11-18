@@ -2,9 +2,9 @@ import { NgModule } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { NoProductsFoundComponent } from "./components/no-products-found/no-products-found.component";
 import { MDBBootstrapModule } from "angular-bootstrap-md";
-import { AngularFireModule } from "@angular/fire";
-import { AngularFireDatabaseModule } from "@angular/fire/database";
-import { AngularFireAuthModule } from "@angular/fire/auth";
+// import { AngularFireModule } from "@angular/fire";
+// import { AngularFireDatabaseModule } from "@angular/fire/database";
+// import { AngularFireAuthModule } from "@angular/fire/auth";
 import { FormsModule, FormBuilder } from "@angular/forms";
 import { RouterModule, Router } from "@angular/router";
 import { OwlModule } from "ngx-owl-carousel";
@@ -36,8 +36,8 @@ declare const window: { gigya?: any; CDP?: any };
     CommonModule,
     MDBBootstrapModule.forRoot(),
     // AngularFireModule.initializeApp(FireBaseConfig),
-    AngularFireDatabaseModule,
-    AngularFireAuthModule,
+    // AngularFireDatabaseModule,
+    // AngularFireAuthModule,
     FormsModule,
     HttpClientModule,
     RouterModule,
@@ -58,9 +58,9 @@ declare const window: { gigya?: any; CDP?: any };
     NoProductsFoundComponent,
     FormsModule,
     MDBBootstrapModule,
-    AngularFireModule,
-    AngularFireAuthModule,
-    AngularFireDatabaseModule,
+    // AngularFireModule,
+    // AngularFireAuthModule,
+    // AngularFireDatabaseModule,
     FormsModule,
     RouterModule,
     OwlModule,
