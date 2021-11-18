@@ -1,6 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <script src="https://cdns.cdp.gigya.com/websdk.js"></script>
+    <script>
+      window.CDP = null;
+      gigya.cdp
+        .init({
+          apiDomain: "EU5",
+          bUnitId: "4_PvhoEUkkk67A_YHJiBIwlw",
+          appId: "HKPAeGbHOXMlHfR6l1PuyQ",
+        })
+        .then((sdk) => (window.CDP = sdk));
+    </script>
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-114417643-2"></script>
   <script>

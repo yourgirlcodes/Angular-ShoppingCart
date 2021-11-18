@@ -17,6 +17,7 @@ export class ProductService {
   cartProducts: FavouriteProduct;
 
   constructor(
+    private reportService: ReportService,
     private woocommerce: WoocommerceSyncService,
     private toastrService: ToastrService
   ) {}
@@ -118,6 +119,11 @@ export class ProductService {
   addToCart(data: Product): void {
     const a: Product[] = JSON.parse(localStorage.getItem("avct_item")) || [];
     a.push(data);
+
+    this.reportService.onAddToCard({
+      product: data.productName,
+      category: data.productCategory,
+    });
 
     this.toastrService.wait(
       "Adding Product to Cart",
