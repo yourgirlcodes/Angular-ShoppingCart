@@ -15,7 +15,7 @@ export interface CDPCustomer {
   calculatedIndicators: Indicator;
   predictiveIndicators: Indicator;
   privacy: Privacy;
-  relationships: Array<Object>;
+  relationships: Array<object>;
   segments: Segment[];
   viewId: string;
   _id: string;

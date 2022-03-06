@@ -19,7 +19,7 @@ export class ToastrService {
     toastr.error(msg, title);
   }
 
-  wait(title: any, msg: any) {
-    toastr.info(msg, title, { timeOut: 3000 });
+  wait(title: any, msg: any, timeOut = 3000) {
+    toastr.info(msg, title, { timeOut: timeOut });
   }
 }

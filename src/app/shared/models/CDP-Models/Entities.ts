@@ -24,5 +24,5 @@ export interface Segment {
   value: string;
 }
 
-export type Indicator = Array<Object>;
+export type Indicator = Array<object>;
 export type Subscription = any; // todo: fill in

@@ -1,7 +1,10 @@
+import { BaseCustomer } from "./CDP-Models/Customer";
+
 export class User {
   $key: string;
   userName: string;
-  emailId: string;
+  firstName: string;
+  primaryEmail: string;
   password?: string;
   location?: {
     lat: number;
@@ -11,7 +14,6 @@ export class User {
   createdOn?: string;
   isAdmin?: boolean;
   avatar?: string;
-  firstName?: string;
   lastName?: string;
   address1?: string;
   address2?: string;

@@ -16,8 +16,6 @@ export class ProductService {
   product: Product;
   category: string;
   basicUserDetails: BasicUserDetails;
-  basicUserDetails2: BasicUserDetails;
-  randomHey: string = "asd";
 
   constructor(
     private woocommerce: WoocommerceSyncService,
@@ -26,23 +24,16 @@ export class ProductService {
     private userService: CDPUserService,
     private authService: AuthService
   ) {
-    console.log("randomHey", this.randomHey);
-
-    this.authService.user$.pipe(filter((user) => !!user)).subscribe((user) => {
-      console.log("products service user", user);
-      this.basicUserDetails = {
-        primaryEmail: user.primaryEmail,
-        firstName: user.firstName,
-        ciamId: user.$key,
-      };
-      this.basicUserDetails2 = {
-        primaryEmail: user.primaryEmail,
-        firstName: user.firstName,
-        ciamId: user.$key,
-      };
-
-      console.log(this.basicUserDetails, "basic user details after ass.");
-    });
+    this.authService.user$ // only need auth service for primaryEmail + ciamId
+      .pipe(filter((user) => !!user))
+      .subscribe((user) => {
+        console.log("products service user", user);
+        this.basicUserDetails = {
+          primaryEmail: user.primaryEmail,
+          firstName: user.firstName,
+          ciamId: user.$key,
+        };
+      });
   }
 
   private products$: Observable<Product[]> = this.getProducts();
@@ -75,13 +66,13 @@ export class ProductService {
 
   getProductById(key: string) {
     return this.products$.pipe(
-      map((prods) => prods.find((p) => p.$key == key))
+      map((prods) => prods.find((p) => p.$key === key))
     );
   }
 
   deleteProduct(key: string) {
     this.products.splice(
-      this.products.findIndex((p) => p.$key == key),
+      this.products.findIndex((p) => p.$key === key),
       1
     );
   }
@@ -140,12 +131,8 @@ export class ProductService {
 
   // Adding new Product to cart db if logged in else localStorage
   addToCart(data: Product): void {
-    console.log("randomHey addToCart", this.randomHey);
-
     const a: Product[] = JSON.parse(localStorage.getItem("avct_item")) || [];
     a.push(data);
-
-    console.log("add to cart user", this.basicUserDetails2);
 
     this.reportService.onAddToCart({
       product: data.productName,

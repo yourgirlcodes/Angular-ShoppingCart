@@ -1,5 +1,6 @@
 import { Inject, Injectable, InjectionToken } from "@angular/core";
 import { User } from "./shared/models/user";
+import {CartProduct} from "./shared/models/CDP-Models/CartProduct";
 
 export const GIGYA_CDP = new InjectionToken("gigya cdp");
 
@@ -12,7 +13,7 @@ export class ReportService {
     private CDP: { report(eventName: string, payload: object): void }
   ) {}
 
-  onAddToCard(payload: { product: string; category: string }) {
+  onAddToCart(payload: CartProduct) {
     this.CDP.report("Add To Cart", payload);
   }
 

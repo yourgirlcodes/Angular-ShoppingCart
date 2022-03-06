@@ -2,7 +2,7 @@ import { ToastrService } from "../../../../shared/services/toastr.service";
 import { NgForm, EmailValidator } from "@angular/forms";
 import { Component, OnInit } from "@angular/core";
 import { Router, ActivatedRoute } from "@angular/router";
-import { UserService } from "../../../../shared/services/user.service";
+import { CDPUserService } from "../../../../shared/services/user.service";
 // import { AuthService } from "../../../../shared/services/auth.service";
 import { User } from "../../../../shared/models/user";
 declare var $: any;
@@ -14,7 +14,7 @@ declare var $: any;
 })
 export class LoginComponent implements OnInit {
   user = {
-    emailId: "",
+    primaryEmail: "",
     loginPassword: "",
   };
 
@@ -24,7 +24,7 @@ export class LoginComponent implements OnInit {
 
   constructor(
     // private authService: AuthService,
-    private userService: UserService,
+    private userService: CDPUserService,
     private toastService: ToastrService,
     private router: Router,
     private route: ActivatedRoute

@@ -16,9 +16,9 @@ export const GIGYA_CIAM = new InjectionToken("gigya ciam");
 export class AuthService {
   authenticatedUser: User;
 
-  private _user$ = new BehaviorSubject<User>(undefined);
+  private subject = new BehaviorSubject<User>(undefined);
 
-  user$: Observable<User> = this._user$.asObservable().pipe(
+  user$: Observable<User> = this.subject.asObservable().pipe(
     tap((user) => (this.authenticatedUser = user)),
     filter((user) => !!user)
   );
@@ -49,7 +49,7 @@ export class AuthService {
         return this.refresh();
       },
       onLogout: (e) => {
-        this._user$.next(ANONYMOUS_USER);
+        this.subject.next(ANONYMOUS_USER);
       },
     });
     combineLatest([this.user$, this.isLoggedIn$])
@@ -69,8 +69,7 @@ export class AuthService {
           callback: (res) => {
             console.log("getAccountInfo", res);
 
-            let knownUser: User = {
-              // have an interface for this that matches
+            const knownUser: User = {
               $key: res.UID,
               primaryEmail: res.profile?.email,
               userName: `${res.profile?.firstName} ${res.profile?.lastName}`,
@@ -79,7 +78,7 @@ export class AuthService {
               isAdmin: false,
             };
 
-            this._user$.next(res.errorCode !== 0 ? ANONYMOUS_USER : knownUser);
+            this.subject.next(res.errorCode !== 0 ? ANONYMOUS_USER : knownUser);
             r(res);
           },
         })
@@ -100,21 +99,22 @@ export class AuthService {
 
   createUserWithEmailAndPassword(emailID: string, password: string) {}
 
+  // signInRegular(email: string, password: string) {}
+  //
+  // signInWithGoogle() {}
+
   openEditUserDetailsModal() {
+    //todo: change this name
     this.gigya.accounts.showScreenSet({
       screenSet: "Default-ProfileUpdate",
       onAfterSubmit: (e) => {
         console.log({ e });
 
-        const updatedUserDetails = {
+        this.subject.next({
           ...this.authenticatedUser,
           ...e.profile,
-          primaryEmail: e.profile.email,
-        };
-
-        this._user$.next(updatedUserDetails);
-
-        console.log({ updatedUserDetails });
+          primaryEmail: e.profile.email ?? this.authenticatedUser.primaryEmail,
+        });
 
         this.toastrService.wait(
           "Loading...",
@@ -123,7 +123,7 @@ export class AuthService {
         );
 
         setTimeout(async () => {
-          // await this.refresh();
+          await this.refresh();
           this.toastrService.success(
             "Got it!",
             "Your profile should be updated!"

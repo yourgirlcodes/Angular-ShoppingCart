@@ -59,9 +59,9 @@ export class CDPUserService {
           },
         };
 
-        let customerAccount: CDPUserAccount = {
+        const customerAccount: CDPUserAccount = {
           ...account,
-          customer: customer,
+          customer,
         };
 
         console.log({ customerAccount });

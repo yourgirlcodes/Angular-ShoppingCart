@@ -15,12 +15,12 @@ export class GigyaCDPService {
       tap((httpRes) => {
         const customer = httpRes["customer"];
 
-        delete customer["created"];
-        delete customer["docSize"];
-        delete customer["updated"];
-        delete customer["updatedTimestamp"];
-        delete customer["viewId"];
-        delete customer["firstSeen"];
+        delete customer.created;
+        delete customer.docSize;
+        delete customer.updated;
+        delete customer.updatedTimestamp;
+        delete customer.viewId;
+        delete customer.firstSeen;
 
         return httpRes;
       })

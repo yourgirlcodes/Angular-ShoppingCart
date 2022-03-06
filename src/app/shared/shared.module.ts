@@ -17,7 +17,7 @@ import { ProductService } from "./services/product.service";
 import { AdminGaurd } from "./guards/admin-gaurd";
 import { AuthGuard } from "./guards/auth_gaurd";
 import { AuthService, GIGYA_CIAM } from "./services/auth.service";
-import { UserService } from "./services/user.service";
+import { CDPUserService } from "./services/user.service";
 import { TranslatePipe } from "./pipes/translate.pipe";
 import { NgxContentLoadingModule } from "ngx-content-loading";
 import { CardLoaderComponent } from "./components/card-loader/card-loader.component";
@@ -82,7 +82,7 @@ declare const window: { gigya?: any; CDP?: any };
     // AuthGuard,
     // AdminGaurd,
     ProductService,
-    UserService,
+    CDPUserService,
     FormBuilder,
     {
       provide: GIGYA_CIAM,

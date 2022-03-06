@@ -18,7 +18,7 @@
           aria-describedby="emailHelp"
           placeholder="Enter email"
           name="emailId"
-          [(ngModel)]="user.emailId"
+          [(ngModel)]="user.primaryEmail"
           mdbInputValidate
           [email]="true"
         />
@@ -109,7 +109,7 @@
                 id="emailId"
                 class="form-control"
                 name="emailId"
-                [(ngModel)]="createUser.emailId"
+                [(ngModel)]="createUser.primaryEmail"
                 placeholder="Enter email"
                 mdbInputValidate
                 [email]="true"
