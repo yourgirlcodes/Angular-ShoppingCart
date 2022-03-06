@@ -1,35 +1,48 @@
-<br />
-<br />
-
-<div class="container">
-  <div class="row">
-    <div class="col-sm-4">
-      <ul class="list-group">
-        <li class="list-group-item hoverable">
-          <a [routerLink]="['/users']">Your Profile</a>
-        </li>
-        <li class="list-group-item hoverable">
-          <a
-            [routerLink]="[
-              '/users',
-              { outlets: { profileOutlet: ['favourite-products'] } }
-            ]"
-            >Your Wishlist</a
-          >
-        </li>
-        <li class="list-group-item hoverable">
-          <a
-            [routerLink]="[
-              '/users',
-              { outlets: { profileOutlet: ['cart-items'] } }
-            ]"
-            >Your Cart</a
-          >
-        </li>
-      </ul>
-    </div>
-    <div class="col-sm-8">
-      <router-outlet name="profileOutlet"></router-outlet>
-    </div>
-  </div>
+<div *ngIf="baseUserDetails">
+  <h1
+    style="
+      font-size: 25px;
+      color: #e91e63;
+      text-align: center;
+      padding-top: 10px;
+    "
+  >
+    Hi, {{ baseUserDetails.firstName }}
+  </h1>
 </div>
+
+<form *ngIf="cdpUserAccount">
+  <span *ngFor="let segment of cdpUserAccount.segments">
+    <span class="col" style="color: #e91e63; padding-bottom: 20px;"
+    >| {{ segment.value }} {{ segment.name }}
+    </span>
+  </span>
+
+  <div *ngIf="cdpUserAccount.activityIndicators">
+    <user-insights
+      [data]="cdpUserAccount.activityIndicators"
+      [title]="'Activity Indicators'"
+    ></user-insights>
+  </div>
+
+  <div *ngIf="activities?.orders">
+    <past-orders
+      [pastOrders]="relevantOrders"
+      [title]="'Past Orders'"
+    ></past-orders>
+  </div>
+
+  <div *ngIf="uniqueCartItems">
+    <recently-viewed
+      [recentlyViewed]="uniqueCartItems"
+      [title]="'Recently Viewed'"
+    ></recently-viewed>
+  </div>
+
+  <div *ngIf="cdpUserAccount.calculatedIndicators">
+    <calculated-indicators
+      [data]="cdpUserAccount.calculatedIndicators"
+      [title]="'Calculated Indicators'"
+    ></calculated-indicators>
+  </div>
+</form>

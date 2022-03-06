@@ -1,26 +1,49 @@
 import { Injectable } from "@angular/core";
 import { Product } from "../models/product";
 import { ToastrService } from "./toastr.service";
-import { Observable } from "rxjs";
-import { map, tap } from "rxjs/operators";
+import { BehaviorSubject, Observable } from "rxjs";
+import { filter, map, tap } from "rxjs/operators";
 import { WoocommerceSyncService } from "../../woocommerce-sync.service";
 import { User } from "../models/user";
 import { ReportService } from "../../report.service";
+import { CDPUserService } from "./user.service";
+import { AuthService } from "./auth.service";
+import { BasicUserDetails } from "../models/CDP-Models/Customer";
 
 @Injectable()
 export class ProductService {
   products: Product[];
   product: Product;
-
-  // favouriteProducts
-  favouriteProducts: FavouriteProduct[];
-  cartProducts: FavouriteProduct;
+  category: string;
+  basicUserDetails: BasicUserDetails;
+  basicUserDetails2: BasicUserDetails;
+  randomHey: string = "asd";
 
   constructor(
     private woocommerce: WoocommerceSyncService,
     private toastrService: ToastrService,
-    private reportService: ReportService
-  ) {}
+    private reportService: ReportService,
+    private userService: CDPUserService,
+    private authService: AuthService
+  ) {
+    console.log("randomHey", this.randomHey);
+
+    this.authService.user$.pipe(filter((user) => !!user)).subscribe((user) => {
+      console.log("products service user", user);
+      this.basicUserDetails = {
+        primaryEmail: user.primaryEmail,
+        firstName: user.firstName,
+        ciamId: user.$key,
+      };
+      this.basicUserDetails2 = {
+        primaryEmail: user.primaryEmail,
+        firstName: user.firstName,
+        ciamId: user.$key,
+      };
+
+      console.log(this.basicUserDetails, "basic user details after ass.");
+    });
+  }
 
   private products$: Observable<Product[]> = this.getProducts();
 
@@ -84,7 +107,7 @@ export class ProductService {
     }, 1500);
   }
 
-  // Fetching unsigned users favourite proucts
+  // Fetching unsigned users favourite products
   getLocalFavouriteProducts(): Product[] {
     const products: Product[] =
       JSON.parse(localStorage.getItem("avf_item")) || [];
@@ -117,12 +140,18 @@ export class ProductService {
 
   // Adding new Product to cart db if logged in else localStorage
   addToCart(data: Product): void {
+    console.log("randomHey addToCart", this.randomHey);
+
     const a: Product[] = JSON.parse(localStorage.getItem("avct_item")) || [];
     a.push(data);
 
-    this.reportService.onAddToCard({
+    console.log("add to cart user", this.basicUserDetails2);
+
+    this.reportService.onAddToCart({
       product: data.productName,
       category: data.productCategory,
+      primaryEmail: this.basicUserDetails.primaryEmail,
+      ciamId: this.basicUserDetails.ciamId[0],
     });
 
     this.toastrService.wait(
@@ -152,7 +181,11 @@ export class ProductService {
     localStorage.setItem("avct_item", JSON.stringify([]));
   }
 
-  // Fetching Locat CartsProducts
+  clearLocalFavourites() {
+    localStorage.setItem("avf_item", JSON.stringify([]));
+  }
+
+  // Fetching Local CartsProducts
   getLocalCartProducts(): Product[] {
     const products: Product[] =
       JSON.parse(localStorage.getItem("avct_item")) || [];
@@ -161,7 +194,9 @@ export class ProductService {
   }
 
   orderCartProducts(user: User) {
-    return this.woocommerce.order(user, this.getLocalCartProducts() || []);
+    return this.woocommerce
+      .order(user, this.getLocalCartProducts() || [])
+      .pipe(tap((r) => console.log("woocommerce.order", r)));
   }
 }
 

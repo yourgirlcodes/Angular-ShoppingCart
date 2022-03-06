@@ -1,11 +1,12 @@
 import { TranslateService } from "./../../../../shared/services/translate.service";
-import { Component, OnInit, VERSION } from "@angular/core";
+import { Component, OnInit } from "@angular/core";
 import { Router } from "@angular/router";
-// import { AuthService } from "./../../../../shared/services/auth.service";
 import { ProductService } from "./../../../../shared/services/product.service";
-
 import { ThemeService } from "src/app/shared/services/theme.service";
 import { AuthService } from "../../../../shared/services/auth.service";
+import { User } from "../../../../shared/models/user";
+import { CDPUserService } from "../../../../shared/services/user.service";
+
 declare var $: any;
 
 @Component({
@@ -14,20 +15,7 @@ declare var $: any;
   styleUrls: ["./navbar.component.scss"],
 })
 export class NavbarComponent implements OnInit {
-  angularVersion = VERSION;
-
-  colorPallet1 = [
-    {
-      title: "Purple Theme",
-      color: "color-purple",
-      id: "purple-theme",
-    },
-    {
-      title: "Blue Theme",
-      color: "color-blue",
-      id: "blue-theme",
-    },
-  ];
+  user: User;
 
   colorPallet2 = [
     {
@@ -41,22 +29,18 @@ export class NavbarComponent implements OnInit {
       id: "violet-theme",
     },
   ];
-  languageList = [
-    { language: "English", langCode: "en" },
-    { language: "French", langCode: "fr" },
-    { language: "Persian", langCode: "fa" },
-    { language: "Japanese", langCode: "ja" },
-    { language: "Hindi", langCode: "hin" },
-  ];
 
   constructor(
     public authService: AuthService,
     private router: Router,
     public productService: ProductService,
     public translate: TranslateService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    public userService: CDPUserService
   ) {
-    // console.log(translate.data);
+    authService.user$.subscribe((user) => {
+      this.user = user;
+    });
   }
 
   ngOnInit() {}
@@ -64,13 +48,23 @@ export class NavbarComponent implements OnInit {
   login() {
     this.authService.showRegistrationLogin();
   }
+
+  editUserDetails() {
+    this.authService.openEditUserDetailsModal();
+  }
+
   logout() {
     this.authService.logout();
+    this.userService.clearUser();
+    this.productService.clearLocalCart();
+    this.productService.clearLocalFavourites();
+
+    localStorage.clear();
+
     this.router.navigate(["/"]);
   }
 
   setLang(lang: string) {
-    // console.log("Language", lang);
     this.translate.use(lang).then(() => {});
   }
 

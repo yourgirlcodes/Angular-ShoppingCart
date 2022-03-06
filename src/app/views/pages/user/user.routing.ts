@@ -7,13 +7,13 @@ export const UserRoutes: Routes = [
   {
     path: "",
     component: UserComponent,
-    canActivate: [AuthGuard],
-    children: [
-      {
-        path: "",
-        component: UserAccountComponent,
-        outlet: "profileOutlet",
-      },
-    ],
+    // canActivate: [AuthGuard],
+    // children: [
+    //   {
+    //     path: "",
+    //     component: UserAccountComponent,
+    //     outlet: "profileOutlet",
+    //   },
+    // ],
   },
 ];

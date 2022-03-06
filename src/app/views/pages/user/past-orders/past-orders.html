@@ -1,0 +1,79 @@
+<!--Section: Products v.2-->
+<section class="section pb-3">
+  <div class="row">
+    <div class="col-md-6">
+      <blockquote class="blockquote float-left bq-primary">
+        <h3 class="bq-title">
+          Past Orders
+        </h3>
+      </blockquote>
+    </div>
+  </div>
+
+  <div *ngIf="loading">
+    <app-card-loader [loop]="4" [height]="500"></app-card-loader>
+  </div>
+
+  <owl-carousel
+    *ngIf="!loading"
+    [options]="options"
+    [items]="bestProducts"
+    [carouselClasses]="['owl-theme', 'row', 'sliding']"
+  >
+    <!--First column-->
+    <div class="item" *ngFor="let order of pastOrders; let i = index">
+      <div class="mb-r">
+        <!--Card-->
+        <div class="card card-cascade wider">
+          <!--Card image-->
+          <a>
+            <div class="view overlay hm-white-slight">
+              <a>
+                <div
+                  class="mask waves-effect waves-light"
+                  mdbRippleRadius
+                ></div>
+              </a>
+            </div>
+          </a>
+          <!--/.Card image-->
+
+          <!--Card content-->
+          <div class="card-body text-center no-padding orderCard">
+            <!--Category & Title-->
+            <a href="" class="text-muted">
+              <h5>
+                Total: {{order.attributes.amount}}{{order.attributes.currency}}
+              </h5>
+            </a>
+            <span class="card-title">
+              <small>
+                # {{ order.attributes.orderId }}
+              </small>
+            </span>
+
+            <!--Description-->
+            <div
+              class="card-text"
+              *ngFor="let item of order.attributes.line_items"
+            >
+              <span>{{item.name}}</span>
+            </div>
+
+            <!--Card footer-->
+            <div class="card-footer">
+              <span class="left"
+                >e-commerce | {{order.attributes.status ?
+                order.attributes.status : 'processing'}}</span
+              >
+            </div>
+          </div>
+          <!--/.Card content-->
+        </div>
+        <!--/.Card-->
+      </div>
+      <!--/First column-->
+    </div>
+  </owl-carousel>
+</section>
+<!--Section: Products v.2-->
