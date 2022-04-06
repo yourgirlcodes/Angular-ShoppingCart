@@ -1,6 +1,6 @@
 import { Express } from "express";
-import { Customer } from "../../gigya-cdp-sdk/entities/Customer";
-import { CDP } from "../../gigya-cdp-sdk";
+import { Customer } from "../gigya-cdp-sdk/entities/Customer";
+import { CDP } from "../gigya-cdp-sdk";
 
 const config = require("./gigyacdp.cred.json");
 
@@ -14,7 +14,7 @@ export function cdpInit(app: Express) {
     {
       dataCenter: config.dataCenter,
       env: config.env,
-    }
+    } as any
   );
 
   let customer;

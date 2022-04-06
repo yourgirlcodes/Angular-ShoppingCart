@@ -12,6 +12,7 @@ import {
   BaseCustomer,
   CDPCustomer,
 } from "../../../shared/models/CDP-Models/Customer";
+import { CDPUserAccount } from "../../../shared/models/CDP-Models/UserAccount";
 
 @Component({
   selector: "app-user-account",
@@ -70,10 +71,10 @@ export class UserComponent implements OnInit, OnDestroy {
     this.subs.unsubscribe();
   }
 
-  getUserAccount(acc) {
+  getUserAccount(acc: CDPUserAccount) {
     const { customer, activities } = acc;
 
-    const profile: CDPCustomer = {
+    const profile = {
       ...customer,
       activityIndicators: this.getActivityIndicators(
         customer.activityIndicators

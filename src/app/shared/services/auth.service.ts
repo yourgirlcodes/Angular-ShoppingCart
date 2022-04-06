@@ -104,7 +104,7 @@ export class AuthService {
   // signInWithGoogle() {}
 
   openEditUserDetailsModal() {
-    //todo: change this name
+    // todo: change this name
     this.gigya.accounts.showScreenSet({
       screenSet: "Default-ProfileUpdate",
       onAfterSubmit: (e) => {

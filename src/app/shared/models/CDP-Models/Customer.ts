@@ -10,10 +10,10 @@ export interface WithCiamId {
 }
 
 export interface CDPCustomer {
-  activityIndicators: Indicator;
+  activityIndicators: Indicator[];
   attributes: Attributes;
-  calculatedIndicators: Indicator;
-  predictiveIndicators: Indicator;
+  calculatedIndicators: Indicator[];
+  predictiveIndicators: Indicator[];
   privacy: Privacy;
   relationships: Array<object>;
   segments: Segment[];
