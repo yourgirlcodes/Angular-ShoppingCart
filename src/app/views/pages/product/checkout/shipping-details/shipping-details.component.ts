@@ -47,7 +47,7 @@ export class ShippingDetailsComponent implements OnInit {
     });
     const data = {
       ...form.value,
-      emailId: this.userDetails.emailId,
+      emailId: this.userDetails.primaryEmail,
       userId: this.userDetails.$key,
       products,
       totalPrice,

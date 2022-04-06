@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core";
-import { UserService } from "./shared/services/user.service";
+import { CDPUserService } from "./shared/services/user.service";
 import { fadeAnimation } from "./shared/animations/fadeIntRoute";
 declare var $: any;
 
@@ -21,7 +21,7 @@ declare var $: any;
   animations: [fadeAnimation],
 })
 export class AppComponent implements OnInit {
-  constructor(private userService: UserService) {}
+  constructor(private userService: CDPUserService) {}
 
   ngOnInit() {
     $(".banner").owlCarousel({

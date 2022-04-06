@@ -1,5 +1,7 @@
 /server/woocommerce.cred.json
+/server/gigyacdp.cred.json
 
+/src/index.html
 
 # See http://help.github.com/ignore-files/ for more about ignoring files.
 
@@ -9,7 +11,7 @@
 /out-tsc
 
 # dependencies
-/node_modules
+**/node_modules
 
 # IDEs and editors
 /.idea

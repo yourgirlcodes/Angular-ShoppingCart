@@ -1,52 +1,83 @@
 import { Injectable } from "@angular/core";
-
-import * as moment from "moment";
-import { User } from "../models/user";
-import { Observable, of } from "rxjs";
+import { BehaviorSubject, combineLatest, of, Subject } from "rxjs";
+import { GigyaCDPService } from "../../gigyaCDP.service";
+import { filter } from "rxjs/operators";
+import { AuthService } from "./auth.service";
+import { CDPUserAccount } from "../models/CDP-Models/UserAccount";
+import { BaseCustomer, CDPCustomer } from "../models/CDP-Models/Customer";
 
 @Injectable()
-export class UserService {
-  selectedUser: User = new User();
-  users: User[] = [];
+export class CDPUserService {
+  private _selectedCDPUserAcc$ = new BehaviorSubject<CDPUserAccount>(undefined);
+  private baseUserDetails: BaseCustomer;
+
+  refresh$ = new Subject();
 
   location = {
     lat: null,
     lon: null,
   };
 
-  constructor() {
-    this.getUsers();
+  constructor(
+    private gigyaCDP: GigyaCDPService,
+    private authService: AuthService
+  ) {
+    combineLatest([
+      authService.user$.pipe(
+        filter((res) => {
+          return !!res;
+        })
+      ),
+      this.refresh$,
+    ]).subscribe(([user]) => {
+      this.baseUserDetails = {
+        primaryEmail: user.primaryEmail,
+        firstName: user.firstName,
+      };
+
+      this.getUserAccountById(user.$key);
+    });
   }
 
-  getUsers() {
-    return of(this.users);
+  public get selectedCDPUserAcc$() {
+    return this._selectedCDPUserAcc$.asObservable();
   }
 
-  getUserById(id: string) {}
+  refreshData() {
+    this.refresh$.next();
+  }
 
-  createUser(data: any) {
-    const updatedData = {
-      ...data,
-      location: this.location,
-      createdOn: moment(new Date()).format("X"),
-      isAdmin: false,
-    };
-    this.users.push(updatedData);
+  getUserAccountById(id: string) {
+    this.gigyaCDP
+      .getUserAccountById(id)
+      .subscribe((account: CDPUserAccount) => {
+        const customer = {
+          ...account.customer,
+          attributes: {
+            ...account.customer.attributes,
+            ...this.baseUserDetails,
+          },
+        };
+
+        const customerAccount: CDPUserAccount = {
+          ...account,
+          customer,
+        };
+
+        console.log({ customerAccount });
+        this._selectedCDPUserAcc$.next(customerAccount);
+      });
   }
 
   isAdmin(emailId: string) {
     return of([]);
   }
 
-  updateUser(user: User) {
-    this.users.splice(
-      this.users.findIndex((u) => u.$key == user.$key),
-      1,
-      user
-    );
-  }
-
   setLocation(lat: any, lon: any) {
     this.location = { lat, lon };
+  }
+
+  clearUser() {
+    this._selectedCDPUserAcc$.next(null);
   }
 }

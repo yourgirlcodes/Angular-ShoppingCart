@@ -65,7 +65,7 @@ export class ResultComponent implements OnInit {
   async pay() {
     this.toast.wait("Loading...", "Sending order...");
     await this.productService
-      .orderCartProducts(this.authService.user)
+      .orderCartProducts(this.authService.authenticatedUser)
       .toPromise();
     this.toast.success("Order sent", "Your items are on their way...");
     this.productService.clearLocalCart();
